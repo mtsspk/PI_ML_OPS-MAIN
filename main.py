@@ -5,30 +5,6 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
-#http://127.0.0.1:8000
-
-'''
-# crear clase BaseModel que garantiza los tipos de datos de las variables
-class Libro(BaseModel):     
-    titulo: str
-    autor: str
-    paginas: int
-    editorial: str
-
-@app.get("/")
-def index():
-    return {"hola": "alo"}
-
-# ruta que contiene variables
-@app.get("/libros/{id}")    
-def mostrar_libro(id:int):
-    return {"data": id}
-
-@app.post("/libros")    # post sirve para 
-def insertar_libro(libro: Libro):
-    return {"message": f"libro {libro.titulo} insertado"}   # retorno de una clase
-'''
-
 # Cargar el archivo CSV en un DataFrame
 df_play_gnr = pd.read_csv('Datasets/df_play_gnr.csv')
 
@@ -142,6 +118,35 @@ def UsersWorstDeveloper(posted_year: int):
 
 
 
+
+@app.get("/sentiment_analysis/{developer}")
+def sentiment_analysis(developer: str):
+    # Filtrar registros con al menos un análisis de sentimiento para el desarrollador proporcionado
+    df_filtered = df_dev_sent[(df_dev_sent['total_sentiment'] > 0) & (df_dev_sent['developer'] == developer)]
+
+    if not df_filtered.empty:
+        # Crear el diccionario con el desarrollador como llave y una lista de sentimientos como valor
+        sentiment_dict = {developer: []}
+
+        # Insertar valores de análisis de sentimientos en la lista
+        for index, row in df_filtered.iterrows():
+            sentiment_values = {
+                "Negative": row['negative_sentiment'],
+                "Neutral": row['neutral_sentiment'],
+                "Positive": row['positive_sentiment']
+            }
+            sentiment_dict[developer].append(sentiment_values)
+
+        # Presentar el diccionario resultante
+        result = {"developer": developer, "sentiments": sentiment_dict[developer]}
+    else:
+        result = {"message": f"No hay datos disponibles para el desarrollador {developer} en df_dev_sent."}
+
+    return result
+
+
+
+'''
 @app.get("/sentiment_analysis")
 def sentiment_analysis():
     # Filtrar registros con al menos un análisis de sentimiento
@@ -176,7 +181,7 @@ def sentiment_analysis():
     result = {"message": message, "sentiment_dict": sentiment_dict}
     
     return result
-
+'''
 
 
 
