@@ -30,22 +30,22 @@ def insertar_libro(libro: Libro):
 '''
 
 # Cargar el archivo CSV en un DataFrame
-df_play_gnr = pd.read_csv('../../Datasets/df_play_gnr.csv')
+df_play_gnr = pd.read_csv('Datasets/df_play_gnr.csv')
 
 # Cargar el archivo CSV en un DataFrame
-df_usr_gnr_top = pd.read_csv('../../Datasets/df_usr_gnr_top.csv')
+df_usr_gnr_top = pd.read_csv('Datasets/df_usr_gnr_top.csv')
 
 # Cargar el archivo CSV en un DataFrame
-df_usr_gnr_top_year = pd.read_csv('../../Datasets/df_usr_gnr_top_year.csv')
+df_usr_gnr_top_year = pd.read_csv('Datasets/df_usr_gnr_top_year.csv')
 
 # Cargar el archivo CSV en un DataFrame
-df_games_rec_top_3 = pd.read_csv('../../Datasets/df_games_rec_top_3.csv')
+df_games_rec_top_3 = pd.read_csv('Datasets/df_games_rec_top_3.csv')
 
 # Cargar el archivo CSV en un DataFrame
-df_dev_rec_worst_3 = pd.read_csv('../../Datasets/df_dev_rec_worst_3.csv')
+df_dev_rec_worst_3 = pd.read_csv('Datasets/df_dev_rec_worst_3.csv')
 
 # Cargar el archivo CSV en un DataFrame
-df_dev_sent = pd.read_csv('../../Datasets/df_dev_sent.csv')
+df_dev_sent = pd.read_csv('Datasets/df_dev_sent.csv')
 
 
 
