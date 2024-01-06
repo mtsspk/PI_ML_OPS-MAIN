@@ -1,7 +1,14 @@
 import pandas as pd
 from fastapi import FastAPI
+#import pyarrow.parquet as pq
+#from typing import List
+
+#import numpy as np
+#from sklearn.preprocessing import StandardScaler
+#from sklearn.metrics.pairwise import cosine_similarity
 # from pydantic import BaseModel
 # from typing import Optional
+
 
 app = FastAPI()
 
@@ -23,7 +30,22 @@ df_dev_rec_worst_3 = pd.read_csv('Datasets/df_dev_rec_worst_3.csv')
 # Cargar el archivo CSV en un DataFrame
 df_dev_sent = pd.read_csv('Datasets/df_dev_sent.csv')
 
+# Cargar el archivo CSV en un DataFrame
+df_games_names = pd.read_csv('Datasets/df_games_names.csv')
 
+# Cargar el archivo Parquet en un DataFrame
+df_games_similarity = pd.read_parquet('Datasets/df_games_similarity.parquet')
+
+
+
+
+# Cargar el archivo CSV en un DataFrame
+#df_games_rec_ML = pd.read_csv('Datasets/df_games_rec_ML.csv')
+
+# Cargar el archivo CSV en un DataFrame
+#scaled_data = pd.read_csv('Datasets/scaled_data.csv')
+# Importar scaled_data como numpy array
+#scaled_data = np.genfromtxt('Datasets/scaled_data.csv', delimiter=',')
 
 
 @app.get("/")
@@ -116,9 +138,6 @@ def UsersWorstDeveloper(posted_year: int):
 
 
 
-
-
-
 @app.get("/sentiment_analysis/{developer}")
 def sentiment_analysis(developer: str):
     # Filtrar registros con al menos un análisis de sentimiento para el desarrollador proporcionado
@@ -146,42 +165,24 @@ def sentiment_analysis(developer: str):
 
 
 
-'''
-@app.get("/sentiment_analysis")
-def sentiment_analysis():
-    # Filtrar registros con al menos un análisis de sentimiento
-    df_filtered = df_dev_sent[df_dev_sent['total_sentiment'] > 0]
-
-    # Obtener desarrolladores con total_sentiment mayor a 0
-    developers_with_sentiment = df_filtered['developer'].unique()
-
-    # Crear el diccionario con desarrolladores como llaves (sin datos en este paso)
-    sentiment_dict = {developer: [] for developer in developers_with_sentiment}
-
-    # Lista de listas para valores de negative, neutral y positive
-    sentiment_values_list = []
-
-    # Insertar valores de análisis de sentimientos en la lista
-    for index, row in df_filtered.iterrows():
-        sentiment_values = {
-            "Negative": row['negative_sentiment'],
-            "Neutral": row['neutral_sentiment'],
-            "Positive": row['positive_sentiment']
-        }
-        sentiment_values_list.append(sentiment_values)
-
-    # Insertar valores en el diccionario de desarrolladores
-    for i, developer in enumerate(developers_with_sentiment):
-        sentiment_dict[developer] = sentiment_values_list[i]
-
-    # Presentar la cantidad de desarrolladores con registros de análisis de sentimientos
-    message = f"Desarrolladores con registros de análisis de sentimientos: {len(sentiment_dict)}"
-
-    # Presentar el diccionario resultante
-    result = {"message": message, "sentiment_dict": sentiment_dict}
+#@app.get("/get_recommendations")
+@app.get("/get_recommendations/{game_id}")
+def get_recommendations(game_id: str, num_recommendations: int = 5):
+    try:
+        game_row = df_games_similarity.loc[game_id]
+    except KeyError:
+        # El juego no se encontró en df_similarity, intentar buscar en df_games_names
+        if game_id in df_games_names['game_id'].values:
+            return {"message": f"No hay recomendaciones pertinentes para el juego con game_id {game_id}."}
+        else:
+            return {"message": f"El juego con game_id {game_id} no existe en df_games_names."}
     
-    return result
-'''
+    similar_games = game_row.sort_values(ascending=False).index.tolist()
 
+    # Excluir el juego de entrada de la lista de recomendaciones
+    similar_games = [game for game in similar_games if game != game_id]
 
+    # Tomar las primeras num_recommendations recomendaciones
+    recommendations = similar_games[:num_recommendations]
 
+    return {"recommendations": recommendations}
