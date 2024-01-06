@@ -169,14 +169,15 @@ def sentiment_analysis(developer: str):
 @app.get("/get_recommendations/{game_id}")
 @app.get("/get_recommendations/{game_id}")
 def get_recommendations(game_id: str, num_recommendations: int = 5):
-    try:
-        game_row = df_games_similarity.loc[game_id]
-    except KeyError:
-        # El juego no se encontró en df_similarity, intentar buscar en df_games_names
-        if game_id in df_games_names['game_id'].values:
-            return {"message": f"No hay recomendaciones pertinentes para el juego con game_id {game_id}."}
-        else:
-            return {"message": f"El juego con game_id {game_id} no existe en df_games_names."}
+    game_row = df_games_similarity.loc[game_id]
+#    try:
+#        game_row = df_games_similarity.loc[game_id]
+#    except KeyError:
+#        # El juego no se encontró en df_similarity, intentar buscar en df_games_names
+#        if game_id in df_games_names['game_id'].values:
+#            return {"message": f"No hay recomendaciones pertinentes para el juego con game_id {game_id}."}
+#        else:
+#            return {"message": f"El juego con game_id {game_id} no existe en df_games_names."}
     
     similar_games = game_row.sort_values(ascending=False).index.tolist()
 
