@@ -165,31 +165,29 @@ def sentiment_analysis(developer: str):
 
 @app.get("/recommendations/{game_id}")
 def get_recommendations(game_id: str, num_recommendations: int = 5):
-    # Buscar el game_id en df_games_similarity
-    game_row = df_games_similarity.loc[game_id]
-
-    # Si se encontró el game_id, ejecutar la función proporcionada
-    if game_row is not None:
-        similar_games = game_row.sort_values(ascending=False).index.tolist()
-        similar_games = [game for game in similar_games if game != game_id]
-        recommendations = similar_games[:num_recommendations]
-        return {"recommendations": recommendations}
-
-    # Si no se encontró el game_id en df_games_similarity, buscarlo en df_games_names
-    else:
+   try:
+        game_name = df_games_names.loc[game_id]
+    except KeyError:
+        # Si no se encontró el game_id en df_games_names, devolver mensaje de id inexistente
         return {"message": f"El game_id {game_id} no existe."}
 
-        '''
-        game_row = df_games_names.loc[game_id]
+    # Si se encontró el game_id en df_games_names, buscarlo en df_games_similarity
+    try:
+        game_row = df_games_similarity.loc[game_id]
+    except KeyError:
+        # Si no se encontró el game_id en df_games_similarity, devolver mensaje de sin recomendaciones
+        return {"message": f"No hay recomendaciones para el juego {game_name}."}
 
-        # Si se encontró el game_id en df_games_names, devolver mensaje que no hay recomendaciones
-        if game_name is not None:
-            return {"message": f"No hay recomendaciones para el juego {game_id}."}
+    game_id = str(game_id)
+    game_row = df_games_similarity.loc[game_id]
+    similar_games = game_row.sort_values(ascending=False).index.tolist()
+    similar_games = [game for game in similar_games if game != game_id]
+    recommendations = similar_games[:num_recommendations]
 
-        # Si tampoco se encontró el game_id en df_games_names, devolver mensaje que es un game_id inexistente
-        else:
-            return {"message": f"El game_id {game_id} no existe."}
-'''
+    return {"recommendations": recommendations}
+
+
+
 
 '''
 @app.get("/recommendations/{game_id}")
