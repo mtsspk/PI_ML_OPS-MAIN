@@ -164,6 +164,46 @@ def sentiment_analysis(developer: str):
     return result
 
 
+
+# Obtén la lista de game_id disponibles
+available_game_ids = df_games_similarity.index.tolist()
+
+@app.get("/recommendations/{game_id}")
+def get_recommendations(game_id: str, num_recommendations: int = 5):
+    try:
+        game_name = df_games_names.loc[game_id]
+    except KeyError:
+        # Si no se encontró el game_id en df_games_names, devolver mensaje de id inexistente
+        return {"message": f"El game_id {game_id} no existe."}
+    else:
+        game_id = str(game_id)
+        game_row = df_games_similarity.loc[game_id]
+        similar_games = game_row.sort_values(ascending=False).index.tolist()
+        similar_games = [game for game in similar_games if game != game_id]
+        recommendations = similar_games[:num_recommendations]
+        
+        return {"recommendations": recommendations}
+
+
+'''
+        
+        # Si se encontró el game_id en df_games_names, buscarlo en df_games_similarity
+        try:
+            game_row = df_games_similarity.loc[game_id]
+        except KeyError:
+            # Si no se encontró el game_id en df_games_similarity, devolver mensaje de sin recomendaciones
+            return {"message": f"No hay recomendaciones para el juego {game_name}."}
+'''
+
+    '''
+    # Resto del código
+
+    # Incluye la lista de game_id disponibles en la respuesta
+    return {"game_id": game_id, "recommendations": recommendations, "available_game_ids": available_game_ids}
+    '''
+
+
+'''
 @app.get("/recommendations/{game_id}")
 def get_recommendations(game_id: str, num_recommendations: int = 5):
     
@@ -180,5 +220,5 @@ def get_recommendations(game_id: str, num_recommendations: int = 5):
         result = {"message": f"No hay datos disponibles para el game_id {game_id}"}
 
     return result
-
+'''
 
