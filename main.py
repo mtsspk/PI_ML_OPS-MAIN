@@ -177,11 +177,11 @@ def get_recommendations(game_id: str, num_recommendations: int = 5):
 
     # Si no se encontró el game_id en df_games_similarity, buscarlo en df_games_names
     else:
-        game_name = df_games_names.loc[game_id, "name"]
+        game_row = df_games_names.loc[game_id]
 
         # Si se encontró el game_id en df_games_names, devolver mensaje que no hay recomendaciones
         if game_name is not None:
-            return {"message": f"No hay recomendaciones para el juego {game_name}."}
+            return {"message": f"No hay recomendaciones para el juego {game_id}."}
 
         # Si tampoco se encontró el game_id en df_games_names, devolver mensaje que es un game_id inexistente
         else:
