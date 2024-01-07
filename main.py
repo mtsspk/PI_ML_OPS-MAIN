@@ -163,6 +163,29 @@ def sentiment_analysis(developer: str):
 
     return result
 
+
+
+@app.get("/recommendations/{game_id}")
+def get_recommendations(game_id: str, num_recommendations: int = 5):
+    try:
+        game_name = df_games_names.loc[game_id]
+    except KeyError:
+        # Si no se encontró el game_id en df_games_names, devolver mensaje de id inexistente
+        return {"message": f"El game_id {game_id} no existe."}
+    else:
+        # Si se encontró el game_id en df_games_names, buscarlo en df_games_similarity
+        try:
+            game_row = df_games_similarity.loc[game_id]
+        except KeyError:
+            # Si no se encontró el game_id en df_games_similarity, devolver mensaje de sin recomendaciones
+            return {"message": f"No hay recomendaciones para el juego {game_name}."}
+
+    # Resto del código sin la redundancia de obtener game_row nuevamente
+
+
+
+
+'''
 @app.get("/recommendations/{game_id}")
 def get_recommendations(game_id: str, num_recommendations: int = 5):
    try:
@@ -185,7 +208,7 @@ def get_recommendations(game_id: str, num_recommendations: int = 5):
     recommendations = similar_games[:num_recommendations]
 
     return {"recommendations": recommendations}
-
+'''
 
 
 
