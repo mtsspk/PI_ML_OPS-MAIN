@@ -166,7 +166,7 @@ def sentiment_analysis(developer: str):
 
 @app.get("/get_recommendations/{game_id}")
 def get_recommendations(game_id: str, num_recommendations: int = 5):
-    game_id = str(game_id)
+    #game_id = str(game_id)
     
     game_row = df_games_similarity.loc[game_id]
     
