@@ -165,7 +165,7 @@ def sentiment_analysis(developer: str):
 
 
 @app.get("/recommendations/{game_id}")
-async def get_recommendations(game_id: str, num_recommendations: int = 5):
+def get_recommendations(game_id: str, num_recommendations: int = 5):
     try:
         # Convertir game_id a cadena si no es una cadena
         game_id = str(game_id)
