@@ -164,7 +164,25 @@ def sentiment_analysis(developer: str):
     return result
 
 
+@app.get("/recommendations/{game_id}")
+def get_recommendations(game_id: str, num_recommendations: int = 5):
+    
+    game_id = str(game_id)
+    game_row = df_games_similarity.loc[game_id]
 
+    if not game_row.empty:
+        similar_games = game_row.sort_values(ascending=False).index.tolist()
+        similar_games = [game for game in similar_games if game != game_id]
+        recommendations = similar_games[:num_recommendations]
+        result = {"recommendations": recommendations}
+
+    else:
+        result = {"message": f"No hay datos disponibles"}
+
+    return result
+
+
+'''
 @app.get("/recommendations/{game_id}")
 def get_recommendations(game_id: str, num_recommendations: int = 5):
     try:
@@ -181,7 +199,7 @@ def get_recommendations(game_id: str, num_recommendations: int = 5):
             return {"message": f"No hay recomendaciones para el juego {game_name}."}
 
     # Resto del código sin la redundancia de obtener game_row nuevamente
-
+'''
 
 
 
