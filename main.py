@@ -163,7 +163,32 @@ def sentiment_analysis(developer: str):
 
     return result
 
+@app.get("/recommendations/{game_id}")
+def get_recommendations(game_id: str, num_recommendations: int = 5):
+    # Buscar el game_id en df_games_similarity
+    game_row = df_games_similarity.loc[game_id]
 
+    # Si se encontró el game_id, ejecutar la función proporcionada
+    if game_row is not None:
+        similar_games = game_row.sort_values(ascending=False).index.tolist()
+        similar_games = [game for game in similar_games if game != game_id]
+        recommendations = similar_games[:num_recommendations]
+        return {"recommendations": recommendations}
+
+    # Si no se encontró el game_id en df_games_similarity, buscarlo en df_games_names
+    else:
+        game_name = df_games_names.loc[game_id, "name"]
+
+        # Si se encontró el game_id en df_games_names, devolver mensaje que no hay recomendaciones
+        if game_name is not None:
+            return {"message": f"No hay recomendaciones para el juego {game_name}."}
+
+        # Si tampoco se encontró el game_id en df_games_names, devolver mensaje que es un game_id inexistente
+        else:
+            return {"message": f"El game_id {game_id} no existe."}
+
+
+'''
 @app.get("/recommendations/{game_id}")
 def get_recommendations(game_id: str, num_recommendations: int = 5):
     game_id = str(game_id)
@@ -178,3 +203,4 @@ def get_recommendations(game_id: str, num_recommendations: int = 5):
     recommendations = similar_games[:num_recommendations]
 
     return {"recommendations": recommendations}
+'''
