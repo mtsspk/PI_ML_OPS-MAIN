@@ -166,12 +166,16 @@ def sentiment_analysis(developer: str):
 
 @app.get("/recommendations/{game_id}")
 def get_recommendations(game_id: str, num_recommendations: int = 5):
+    '''
     try:
         # Convertir game_id a cadena si no es una cadena
         game_id = str(game_id)
         game_row = df_games_similarity.loc[game_id]
     except KeyError:
         raise HTTPException(status_code=404, detail=f"El juego con game_id {game_id} no existe en el índice de df_similar_games.")
+    '''
+    game_id = str(game_id)
+    game_row = df_games_similarity.loc[game_id]
 
     similar_games = game_row.sort_values(ascending=False).index.tolist()
 
