@@ -195,12 +195,12 @@ def get_recommendations(game_id: str, num_recommendations: int = 5):
             return {"message": f"No hay recomendaciones para el juego {game_name}."}
 '''
 
-    '''
+'''
     # Resto del código
 
     # Incluye la lista de game_id disponibles en la respuesta
     return {"game_id": game_id, "recommendations": recommendations, "available_game_ids": available_game_ids}
-    '''
+'''
 
 
 '''
