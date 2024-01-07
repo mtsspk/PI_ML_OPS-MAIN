@@ -170,13 +170,13 @@ available_game_ids = df_games_similarity.index.tolist()
 
 @app.get("/recommendations/{game_id}")
 def get_recommendations(game_id: str, num_recommendations: int = 5):
+    game_id = str(game_id)
     try:
         game_name = df_games_names.loc[game_id]
     except KeyError:
         # Si no se encontró el game_id en df_games_names, devolver mensaje de id inexistente
         return {"message": f"El game_id {game_id} no existe."}
-    else:
-        game_id = str(game_id)
+    else:        
         game_row = df_games_similarity.loc[game_id]
         similar_games = game_row.sort_values(ascending=False).index.tolist()
         similar_games = [game for game in similar_games if game != game_id]
