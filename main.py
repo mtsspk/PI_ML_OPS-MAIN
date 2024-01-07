@@ -177,7 +177,7 @@ def get_recommendations(game_id: str, num_recommendations: int = 5):
         result = {"recommendations": recommendations}
 
     else:
-        result = {"message": f"No hay datos disponibles"}
+        result = {"message": f"No hay datos disponibles para el game_id {game_id}"}
 
     return result
 
